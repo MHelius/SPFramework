@@ -6,10 +6,8 @@
 //以下为框架启动
 include_once './core/core.php';
 
-//核心类实例化
-$core = new Core();
-
 //启动框架
+$core = new Core();
 $core->bootstrap();
 
 ?>
