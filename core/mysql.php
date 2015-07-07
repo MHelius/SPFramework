@@ -9,6 +9,8 @@ class Mysql{
 	private $obj;
 	private $pamas;
 
+    static $pdos;
+
 	/**
 	 * 构造函数
 	 *
@@ -41,10 +43,18 @@ class Mysql{
 	private function getPdo($db)
 	{
 		//获取配置
-		$config = include_once CONF.'/config.php';
-		$config = $config['mysql'][$db];
+        global $config;
 
-		$this->pdo = new PDO('mysql:host='.$config['host'].';dbname='.$db,$config['user'],$config['pass'],$config['config']);
+		$conf = $config['mysql'][$db];
+
+        if(!empty(self::$pdos[$db]))
+        {
+            $this->pdo = self::$pdos[$db];
+        }
+        else
+        {
+		    $this->pdo = self::$pdos[$db] = new PDO('mysql:host='.$conf['host'].';dbname='.$db,$conf['user'],$conf['pass'],$conf['config']);
+        }
 	}
 
 	/**

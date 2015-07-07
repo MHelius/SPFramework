@@ -12,9 +12,10 @@ define("CORE"	, DIRS."/core");        //框架目录
 //必选组件
 include_once CONF.'/config.php';        //加载配置组件
 include_once CORE.'/Route.php';         //加载路由组件
+include_once CORE.'/Autoload.php';      //加载自动加载组件
 
 //可选组件
-include_once CORE.'/Mysql.php';         //加载Mysql快速SQL生成组件
+include_once CORE.'/mysql.php';         //加载Mysql快速SQL生成组件
 include_once CORE.'/View.php';          //加载视图组件
 
 /**
@@ -40,6 +41,12 @@ class Core extends Route{
 	 */
 	function bootstrap()
 	{
+		//验证是否登陆
+		$this->islogin();
+
+		//自动加载
+		$this->autoload();
+
 		//加载控制器
 		$this->toController();
 
@@ -78,6 +85,53 @@ class Core extends Route{
 		}
 	}
 
+	/**
+	 * 验证是否登陆
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	private function islogin()
+	{
+		$path = $this->getPath();
+
+		if(!in_array($path['clss'],array('login','index')))
+		{
+			if(empty($_SESSION['user']))
+			{
+				//没登陆统一跳至首页
+				header('location: /');
+			}
+		}
+		else
+		{
+			if(!empty($_SESSION['user']))
+			{
+				//已登陆统一跳至home
+				header('location: /home');
+			}
+		}
+	}
+
+	/**
+	 * 自动加载
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	private function autoload()
+	{
+		$autoload_obj = new Autoload();
+		spl_autoload_register(array($autoload_obj,'load'));
+	}
 }
 
 ?>

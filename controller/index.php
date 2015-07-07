@@ -31,6 +31,9 @@ class index extends View{
 		//var_dump();die;
 
 		//$this->toView();
+
+
+
 	}
 
 }

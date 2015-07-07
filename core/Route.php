@@ -22,9 +22,12 @@ class Route{
 
 		$url = array();
 
-		if(!empty($_SERVER['PATH_INFO']))
+		$_SERVER['REQUEST_URI'] = explode('?',$_SERVER['REQUEST_URI']);
+		$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'][0];
+
+		if(!empty($_SERVER['REQUEST_URI']))
 		{
-			$r_url  = strtolower($_SERVER['PATH_INFO']);
+			$r_url  = strtolower($_SERVER['REQUEST_URI']);
 			$url    = explode('/',$r_url);
 			unset($url[0]);
 		}
