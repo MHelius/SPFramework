@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond $1 !^(index.php|front|admin|robots\.txt)
+RewriteRule ^(.*)$ index.php/$1 [L]
+

@@ -17,6 +17,8 @@ SPFramework
 
 1.SQL语句组装类（MYSQL）
 
+（注意：附上apache的重写规则，nginx请按照apache的重写规则重写url，核心思想，隐藏index.php即可）
+
 This project is a Stable Version
 
 This framework‘s name means that "Simple" AND "Practical",Will support the basic tool to use，Maintainable，Low Learning costs
