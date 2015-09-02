@@ -41,9 +41,6 @@ class Core extends Route{
 	 */
 	function bootstrap()
 	{
-		//验证是否登陆
-		$this->islogin();
-
 		//自动加载
 		$this->autoload();
 
@@ -82,38 +79,6 @@ class Core extends Route{
 		else
 		{
 			throw new \Exception('controller not found');
-		}
-	}
-
-	/**
-	 * 验证是否登陆
-	 *
-	 * 详细说明
-	 * @形参
-	 * @访问      公有
-	 * @返回值    void
-	 * @throws
-	 * helius
-	 */
-	private function islogin()
-	{
-		$path = $this->getPath();
-
-		if(!in_array($path['clss'],array('login','index')))
-		{
-			if(empty($_SESSION['user']))
-			{
-				//没登陆统一跳至首页
-				header('location: /');
-			}
-		}
-		else
-		{
-			if(!empty($_SESSION['user']))
-			{
-				//已登陆统一跳至home
-				header('location: /home');
-			}
 		}
 	}
 
