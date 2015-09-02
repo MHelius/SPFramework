@@ -25,7 +25,6 @@ class Route{
 	 */
 	function getPath()
 	{
-
 		if(!empty($this->path))
 		{
 			return $this->path;
@@ -39,7 +38,7 @@ class Route{
 		{
 			$path = $_SERVER['PATH_INFO'];
 		}
-		//其次选择request_uri参数，性能差
+		//其次选择request_uri，性能差
 		elseif(isset($_SERVER['REQUEST_URI']))
 		{
 			$path = $_SERVER['REQUEST_URI'];
@@ -51,6 +50,7 @@ class Route{
 			throw new \Exception('Server Don`t Have REQUEST_URI or PATH_INFO');
 		}
 
+		//url大小写兼容
 		$path   = strtolower($path);
 		$url    = explode('/',$path);
 		unset($url[0]);
