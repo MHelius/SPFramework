@@ -10,6 +10,7 @@ class Route{
 
 	public $def_path    = 'index';
 	public $def_file    = 'index';
+	public $def_clss    = 'index';
 	public $path        = array();
 
 	/**
@@ -30,45 +31,38 @@ class Route{
 			return $this->path;
 		}
 
-		$url = array();
+		$path   = '';
+		$url    = array();
 
-		if(!isset($_SERVER['REQUEST_URI']))
+		//推荐使用path_info，性能更佳
+		if(isset($_SERVER['PATH_INFO']))
 		{
-			throw new \Exception('Server Don`t Have REQUEST_URI');
+			$path = $_SERVER['PATH_INFO'];
+		}
+		//其次选择request_uri参数，性能差
+		elseif(isset($_SERVER['REQUEST_URI']))
+		{
+			$path = $_SERVER['REQUEST_URI'];
+			$path = explode('?',$path);
+			$path = $path[0];
+		}
+		else
+		{
+			throw new \Exception('Server Don`t Have REQUEST_URI or PATH_INFO');
 		}
 
-		$_SERVER['REQUEST_URI'] = explode('?',$_SERVER['REQUEST_URI']);
-		$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'][0];
+		$path   = strtolower($path);
+		$url    = explode('/',$path);
+		unset($url[0]);
 
-		if(!empty($_SERVER['REQUEST_URI']))
-		{
-			$r_url  = strtolower($_SERVER['REQUEST_URI']);
-			$url    = explode('/',$r_url);
-			unset($url[0]);
-		}
-
-		//控制器识别优先
-		$count = count($url);
-
-		if($count == 1)
-		{
-			$path    = implode('/',$url);
-		}
-		elseif($count > 1)
-		{
-			$file    = array_pop($url);
-			$path    = implode('/',$url);
-		}
-
-		$f_file = empty($file)?$this->def_file:$file;
-		$f_path = empty($path)?$this->def_path:$path;
-		$f_clss = explode('/',$f_path);
-		$f_clss = array_pop($f_clss);
+		$f_file = array_pop($url);
+		$f_path = implode('/',$url);
+		$f_clss = end($url);
 
 		return $this->path = array(
-			'file'  => $f_file,
-			'path'  => $f_path,
-			'clss'  => $f_clss,
+			'file'  => empty($f_file)?$this->def_file:$f_file,
+			'path'  => empty($f_path)?$this->def_path:$f_path,
+			'clss'  => empty($f_clss)?$this->def_clss:$f_clss,
 		);
 	}
 
