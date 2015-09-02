@@ -4,7 +4,7 @@
 session_start();
 
 //以下为框架启动
-include_once './core/core.php';
+include_once './core/Core.php';
 
 //启动框架
 $core = new Core();

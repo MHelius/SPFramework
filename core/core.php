@@ -15,7 +15,7 @@ include_once CORE.'/Route.php';         //加载路由组件
 include_once CORE.'/Autoload.php';      //加载自动加载组件
 
 //可选组件
-include_once CORE.'/mysql.php';         //加载Mysql快速SQL生成组件
+include_once CORE.'/Mysql.php';         //加载Mysql快速SQL生成组件
 include_once CORE.'/View.php';          //加载视图组件
 
 /**
