@@ -14,7 +14,7 @@ class index extends View{
 	 */
 	function index()
 	{
-		$this->assign('test','This is SPF Hello World');
+		$this->assign('test',\test_module\tools::get());
 
 		//$mysql = new Mysql('test','test');
 

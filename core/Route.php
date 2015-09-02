@@ -12,6 +12,16 @@ class Route{
 	public $def_file    = 'index';
 	public $path        = array();
 
+	/**
+	 * 解析URL
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
 	function getPath()
 	{
 
@@ -21,6 +31,11 @@ class Route{
 		}
 
 		$url = array();
+
+		if(!isset($_SERVER['REQUEST_URI']))
+		{
+			throw new \Exception('Server Don`t Have REQUEST_URI');
+		}
 
 		$_SERVER['REQUEST_URI'] = explode('?',$_SERVER['REQUEST_URI']);
 		$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'][0];
