@@ -32,6 +32,10 @@ class index extends View{
 		/* mysql delete test */
 		//$res = $mysql->delete(array('id'=>1));
 
+		/* redis test */
+		//$redis = new Redish(0);
+		//$redis->redis()->set('xx','xx');
+
 		/* view test */
 		//$this->toView();
 	}
