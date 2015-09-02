@@ -15,7 +15,8 @@ SPFramework
 
 目前已经支持的组件
 
-1.SQL语句组装类（MYSQL）
+1.SQL语句组装类（Mysql）
+2.Redis单例类（Redis）
 
 （注意：附上apache的重写规则，nginx请按照apache的重写规则重写url，核心思想，隐藏index.php即可）
 
