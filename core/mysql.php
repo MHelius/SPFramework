@@ -280,6 +280,21 @@ class Mysql{
 	}
 
 	/**
+	 * bind
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	function bind($key,$val)
+	{
+		$this->pamas[$key] = $val;
+	}
+
+	/**
 	 * query
 	 *
 	 * 详细说明
