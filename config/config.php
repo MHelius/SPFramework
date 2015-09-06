@@ -7,7 +7,7 @@
  * Time: 上午10:49
  */
 
-return array(
+$config = array(
 	'mysql'=>array(
 		'test'=>array(
 			'host'  =>'127.0.0.1',

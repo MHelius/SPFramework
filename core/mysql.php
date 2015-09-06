@@ -168,7 +168,7 @@ class Mysql{
 			}
 		}
 
-		$rand = mt_rand(0,$weight_max);
+		$rand = mt_rand(0,$weight_max - 1);
 
 		return $weight_arr[$rand];
 	}
@@ -551,7 +551,7 @@ class Mysql{
 			if(!empty($this->obj['update']))
 			{
 				//读写标记
-				$this->wr_flag == 'w';
+				$this->wr_flag = 'w';
 
 				$sql = $this->get_update();
 				$this->resets();
@@ -561,7 +561,7 @@ class Mysql{
 			elseif(!empty($this->obj['insert']))
 			{
 				//读写标记
-				$this->wr_flag == 'w';
+				$this->wr_flag = 'w';
 
 				$sql =  $this->get_insert();
 				$this->resets();
@@ -571,7 +571,7 @@ class Mysql{
 			elseif(!empty($this->obj['replace']))
 			{
 				//读写标记
-				$this->wr_flag == 'w';
+				$this->wr_flag = 'w';
 
 				$sql =  $this->get_replace();
 				$this->resets();
@@ -581,7 +581,7 @@ class Mysql{
 			elseif(!empty($this->obj['delete']))
 			{
 				//读写标记
-				$this->wr_flag == 'w';
+				$this->wr_flag = 'w';
 
 				$sql =  $this->get_delete();
 				$this->resets();
@@ -593,7 +593,7 @@ class Mysql{
 				//读写标记
 				if(empty($this->wr_flag))
 				{
-					$this->wr_flag == 'r';
+					$this->wr_flag = 'r';
 				}
 
 				$sql =  $this->get_select();
@@ -885,7 +885,7 @@ class Mysql{
 	function beginTransaction()
 	{
 		//读写标记
-		$this->wr_flag == 'w';
+		$this->wr_flag = 'w';
 
 		//链接mysql
 		$this->getPdo();
