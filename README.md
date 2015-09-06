@@ -7,7 +7,7 @@ SPFramework
 
 2.降低团队成员学习成本（借鉴了SMARTY用法等），使用了普通传统的MVC结构构造以及易读的文件夹名称
 
-3.能够挂载一些十分基础的其他服务，例如MySql语句组件，Redis操作类，MongoDB操作类，MemberCached等
+3.能够挂载/卸载十分基础的其他服务，例如View视图层组件，MySql语句组件，Redis操作类，MongoDB操作类，MemberCached等
 
 4.对自有类库能够做到自动加载，其优点为：
 
