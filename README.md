@@ -9,7 +9,7 @@ SPFramework
 
 3.能够挂载/卸载十分基础的其他服务，例如View视图层组件，MySql语句组件，Redis操作类，MongoDB操作类，MemberCached等
 
-4.对自有类库能够做到自动加载，其优点为：
+4.类库能够做到自动加载，其优点为：
 
 	1.用时include文件，做到最优效率
 
