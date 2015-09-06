@@ -18,16 +18,16 @@ class index extends View{
 		$this->assign('test',\test_module\tools::get());
 
 		/* mysql query test */
-		$mysql = new Mysql('test','member');
+		//$mysql = new Mysql('test','member');
 		//$mysql->field(array('*'));
 		//$mysql->where(array('id'=>array(4,5)));
 		//$res = $mysql->fetchAll();
 
 		/* mysql insert test */
-		$res = $mysql->insert(array('val'=>'xxxx','con'=>'yyyy'));
-var_dump($res);die;
+		//$res = $mysql->insert(array('val'=>'xxxx'));
+
 		/* mysql update test */
-		//$res = $mysql->update(array('id'=>1),arary('a'=>1));
+		//$res = $mysql->update(array('id'=>1),array('val'=>'vvvvvvv'));
 
 		/* mysql delete test */
 		//$res = $mysql->delete(array('id'=>1));
