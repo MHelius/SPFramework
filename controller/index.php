@@ -15,17 +15,17 @@ class index extends View{
 	function index()
 	{
 		/* output test */
-		//$this->assign('test',\test_module\tools::get());
+		$this->assign('test',\test_module\tools::get());
 
 		/* mysql query test */
-		$mysql = new Mysql('test2','member');
-		$mysql->field(array('*'));
+		$mysql = new Mysql('test','member');
+		//$mysql->field(array('*'));
 		//$mysql->where(array('id'=>array(4,5)));
-		$res = $mysql->fetchAll();var_dump($res);die;
+		//$res = $mysql->fetchAll();
 
 		/* mysql insert test */
-		//$res = $mysql->insert(array('id'=>1,'tips_id'=>1,'a'=>1,'b'=>1));
-
+		$res = $mysql->insert(array('val'=>'xxxx','con'=>'yyyy'));
+var_dump($res);die;
 		/* mysql update test */
 		//$res = $mysql->update(array('id'=>1),arary('a'=>1));
 

@@ -93,6 +93,22 @@ class Mysql{
 	}
 
 	/**
+	 * 获取数据库链接配置
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	private function getDbCofig($config)
+	{
+		$config = (isset($config) && is_array($config))?$config:array();
+		return $config + array(\PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+	}
+
+	/**
 	 * mysql路由
 	 *
 	 * 详细说明
@@ -104,42 +120,49 @@ class Mysql{
 	 */
 	private function pdoRout()
 	{
-		//获取配置
-		global $config;
-
-		$conf = $config['mysql'][$this->db];
-
-		//读写分离
-		if(isset($conf['read']) && isset($conf['write']))
+		try
 		{
-			//写标签判断
-			if($this->wr_flag == 'w')
+			//获取配置
+			global $config;
+
+			$conf = $config['mysql'][$this->db];
+
+			//读写分离
+			if(isset($conf['read']) && isset($conf['write']))
 			{
-				$this->pdo = self::$pdos[$this->db]['w'] = new PDO('mysql:host='.$conf['write']['host'].';dbname='.$this->db,$conf['write']['user'],$conf['write']['pass'],$conf['write']['config']);
+				//写标签判断
+				if($this->wr_flag == 'w')
+				{
+					$this->pdo = self::$pdos[$this->db]['w'] = new PDO('mysql:host='.$conf['write']['host'].':'.$conf['write']['port'].';dbname='.$this->db,$conf['write']['user'],$conf['write']['pass'],$this->getDbCofig($conf['write']['config']));
+				}
+				//读标签判断
+				elseif($this->wr_flag == 'r')
+				{
+					//判断读取库权重
+					$rand = $this->weight($conf['read']);
+
+					$read_conf = $conf['read'][$rand];
+
+					$this->pdo = self::$pdos[$this->db]['r'][$rand] = new PDO('mysql:host='.$read_conf['host'].':'.$read_conf['port'].';dbname='.$this->db,$read_conf['user'],$read_conf['pass'],$this->getDbCofig($read_conf['config']));
+				}
+				else
+				{
+					throw new \Exception('Write And Read Flag Error');
+				}
 			}
-			//读标签判断
-			elseif($this->wr_flag == 'r')
+			//单库
+			elseif(isset($conf['host']))
 			{
-				//判断读取库权重
-				$rand = $this->weight($conf['read']);
-
-				$read_conf = $conf['read'][$rand];
-
-				$this->pdo = self::$pdos[$this->db]['r'][$rand] = new PDO('mysql:host='.$read_conf['host'].';dbname='.$this->db,$read_conf['user'],$read_conf['pass'],$read_conf['config']);
+				$this->pdo = self::$pdos[$this->db] = new PDO('mysql:host='.$conf['host'].':'.$conf['port'].';dbname='.$this->db,$conf['user'],$conf['pass'],$this->getDbCofig($conf['config']));
 			}
 			else
 			{
-				throw new \Exception('Write And Read Flag Error');
+				throw new \Exception('Config File Error');
 			}
 		}
-		//单库
-		elseif(isset($conf['host']))
+		catch(PDOException $e)
 		{
-			$this->pdo = self::$pdos[$this->db] = new PDO('mysql:host='.$conf['host'].';dbname='.$this->db,$conf['user'],$conf['pass'],$conf['config']);
-		}
-		else
-		{
-			throw new \Exception('Config File Error');
+			die('Connection failed: ' . $e->getMessage());
 		}
 	}
 
@@ -420,7 +443,7 @@ class Mysql{
 	 * @throws
 	 * helius
 	 */
-	function query($sql,$cols = 'all')
+	function query($sql,$cols = 'oth')
 	{
 		//链接mysql
 		$this->getPdo();
@@ -430,7 +453,7 @@ class Mysql{
 
 		//执行
 		$std->execute($this->pamas);
-		
+
 		$this->pamas = array();
 
 		switch($cols)
@@ -440,6 +463,7 @@ class Mysql{
 			case 'all':$q = 'fetchAll';     break;
 			case 'del':$q = 'rowCount';     break;
 			case 'upd':$q = 'rowCount';     break;
+			case 'oth':$q = 'rowCount';     break;
 			case 'ins':return $this->pdo->lastInsertId(); break;
 			default: throw new \Exception('error query type');break;
 		}
@@ -563,7 +587,7 @@ class Mysql{
 				//读写标记
 				$this->wr_flag = 'w';
 
-				$sql =  $this->get_insert();
+				$sql = $this->get_insert();
 				$this->resets();
 				return $sql;
 			}
@@ -573,7 +597,7 @@ class Mysql{
 				//读写标记
 				$this->wr_flag = 'w';
 
-				$sql =  $this->get_replace();
+				$sql = $this->get_replace();
 				$this->resets();
 				return $sql;
 			}
@@ -583,7 +607,7 @@ class Mysql{
 				//读写标记
 				$this->wr_flag = 'w';
 
-				$sql =  $this->get_delete();
+				$sql = $this->get_delete();
 				$this->resets();
 				return $sql;
 			}
@@ -596,7 +620,7 @@ class Mysql{
 					$this->wr_flag = 'r';
 				}
 
-				$sql =  $this->get_select();
+				$sql = $this->get_select();
 				$this->resets();
 				return $sql;
 			}
