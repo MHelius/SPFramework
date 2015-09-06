@@ -20,7 +20,7 @@ return array(
 		),
 		'test2'=>array(
 			'read'=>array(
-				'20'=>array(
+				'8'=>array(
 					'host'  =>'127.0.0.1',
 					'port'  =>'3306',
 					'user'  =>'root',
@@ -29,7 +29,7 @@ return array(
 						\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES'utf8';",
 					)
 				),
-				'80'=>array(
+				'2'=>array(
 					'host'  =>'127.0.0.1',
 					'port'  =>'3306',
 					'user'  =>'root',

@@ -9,6 +9,8 @@ class Mysql{
 	private $obj;
 	private $pamas;
 
+	private $wr_flag;
+
     static $pdos;
 
 	/**
@@ -26,8 +28,6 @@ class Mysql{
 		$this->db           = $db;
 		$this->table        = $table;
 		$this->return_type  = PDO::FETCH_ASSOC;
-
-		$this->getPdo($db);
 	}
 
 	/**
@@ -40,21 +40,137 @@ class Mysql{
 	 * @throws
 	 * helius
 	 */
-	private function getPdo($db)
+	private function getPdo()
 	{
 		//获取配置
-        global $config;
+		global $config;
 
-		$conf = $config['mysql'][$db];
+		$conf = $config['mysql'][$this->db];
 
-        if(!empty(self::$pdos[$db]))
-        {
-            $this->pdo = self::$pdos[$db];
-        }
-        else
-        {
-		    $this->pdo = self::$pdos[$db] = new PDO('mysql:host='.$conf['host'].';dbname='.$db,$conf['user'],$conf['pass'],$conf['config']);
-        }
+		//读写分离
+		if(isset($conf['read']) && isset($conf['write']))
+		{
+			//写
+			if(!empty(self::$pdos[$this->db]['w']))
+			{
+				$this->pdo = self::$pdos[$this->db]['w'];
+			}
+			//读
+			elseif(!empty(self::$pdos[$this->db]['r']))
+			{
+				$rand = $this->weight($conf['read']);
+
+				if(!empty(self::$pdos[$this->db]['r'][$rand]))
+				{
+					$this->pdo = self::$pdos[$this->db]['r'][$rand];
+				}
+				else
+				{
+					$this->pdoRout();
+				}
+			}
+			else
+			{
+				$this->pdoRout();
+			}
+		}
+		//单库
+		elseif(isset($conf['host']))
+		{
+			if(!empty(self::$pdos[$this->db]))
+			{
+				$this->pdo = self::$pdos[$this->db];
+			}
+			else
+			{
+				$this->pdoRout();
+			}
+		}
+		else
+		{
+			throw new \Exception('Config File Error');
+		}
+	}
+
+	/**
+	 * mysql路由
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	private function pdoRout()
+	{
+		//获取配置
+		global $config;
+
+		$conf = $config['mysql'][$this->db];
+
+		//读写分离
+		if(isset($conf['read']) && isset($conf['write']))
+		{
+			//写标签判断
+			if($this->wr_flag == 'w')
+			{
+				$this->pdo = self::$pdos[$this->db]['w'] = new PDO('mysql:host='.$conf['write']['host'].';dbname='.$this->db,$conf['write']['user'],$conf['write']['pass'],$conf['write']['config']);
+			}
+			//读标签判断
+			elseif($this->wr_flag == 'r')
+			{
+				//判断读取库权重
+				$rand = $this->weight($conf['read']);
+
+				$read_conf = $conf['read'][$rand];
+
+				$this->pdo = self::$pdos[$this->db]['r'][$rand] = new PDO('mysql:host='.$read_conf['host'].';dbname='.$this->db,$read_conf['user'],$read_conf['pass'],$read_conf['config']);
+			}
+			else
+			{
+				throw new \Exception('Write And Read Flag Error');
+			}
+		}
+		//单库
+		elseif(isset($conf['host']))
+		{
+			$this->pdo = self::$pdos[$this->db] = new PDO('mysql:host='.$conf['host'].';dbname='.$this->db,$conf['user'],$conf['pass'],$conf['config']);
+		}
+		else
+		{
+			throw new \Exception('Config File Error');
+		}
+	}
+
+	/**
+	 * 权重计算器
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	function weight(array $weight)
+	{
+		$weight_max = 0;
+		$weight_arr = array();
+
+		foreach($weight AS $k=>$row)
+		{
+			$weight_max += $k;
+
+			for($i=0;$i<$k;$i++)
+			{
+				$weight_arr[] = $k;
+			}
+		}
+
+		$rand = mt_rand(0,$weight_max);
+
+		return $weight_arr[$rand];
 	}
 
 	/**
@@ -306,6 +422,9 @@ class Mysql{
 	 */
 	function query($sql,$cols = 'all')
 	{
+		//链接mysql
+		$this->getPdo();
+
 		//预处理
 		$std = $this->pdo->prepare($sql);
 
@@ -431,6 +550,9 @@ class Mysql{
 			//更新
 			if(!empty($this->obj['update']))
 			{
+				//读写标记
+				$this->wr_flag == 'w';
+
 				$sql = $this->get_update();
 				$this->resets();
 				return $sql;
@@ -438,6 +560,9 @@ class Mysql{
 			//插入
 			elseif(!empty($this->obj['insert']))
 			{
+				//读写标记
+				$this->wr_flag == 'w';
+
 				$sql =  $this->get_insert();
 				$this->resets();
 				return $sql;
@@ -445,6 +570,9 @@ class Mysql{
 			//替换插入
 			elseif(!empty($this->obj['replace']))
 			{
+				//读写标记
+				$this->wr_flag == 'w';
+
 				$sql =  $this->get_replace();
 				$this->resets();
 				return $sql;
@@ -452,6 +580,9 @@ class Mysql{
 			//删除
 			elseif(!empty($this->obj['delete']))
 			{
+				//读写标记
+				$this->wr_flag == 'w';
+
 				$sql =  $this->get_delete();
 				$this->resets();
 				return $sql;
@@ -459,6 +590,12 @@ class Mysql{
 			//查询
 			else
 			{
+				//读写标记
+				if(empty($this->wr_flag))
+				{
+					$this->wr_flag == 'r';
+				}
+
 				$sql =  $this->get_select();
 				$this->resets();
 				return $sql;
@@ -747,6 +884,12 @@ class Mysql{
 	 */
 	function beginTransaction()
 	{
+		//读写标记
+		$this->wr_flag == 'w';
+
+		//链接mysql
+		$this->getPdo();
+
 		return $this->pdo->beginTransaction();
 	}
 
@@ -762,6 +905,11 @@ class Mysql{
 	 */
 	function rollBack()
 	{
+		if(!isset($this->pdo))
+		{
+			throw new \Exception('Please Begin Transaction Before Rollback');
+		}
+
 		return $this->pdo->rollBack();
 	}
 
@@ -777,6 +925,11 @@ class Mysql{
 	 */
 	function commit()
 	{
+		if(!isset($this->pdo))
+		{
+			throw new \Exception('Please Begin Transaction Before Commit');
+		}
+
 		return $this->pdo->commit();
 	}
 }
