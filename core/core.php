@@ -50,7 +50,7 @@ class Core extends Route{
 		$this->exceptionHandler();
 
 		//自动加载
-		$this->autoload();
+		$this->autoLoad();
 
 		//加载控制器
 		$this->toController();
@@ -111,7 +111,7 @@ class Core extends Route{
 	 * @throws
 	 * helius
 	 */
-	private function autoload()
+	private function autoLoad()
 	{
 		$autoload_obj = new Autoload();
 		spl_autoload_register(array($autoload_obj,'load'));
