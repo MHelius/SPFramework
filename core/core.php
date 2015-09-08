@@ -13,6 +13,7 @@ define("CORE"	, DIRS."/core");        //框架目录
 include_once CONF.'/config.php';        //加载配置组件
 include_once CORE.'/Route.php';         //加载路由组件
 include_once CORE.'/Autoload.php';      //加载自动加载组件
+include_once CORE.'/SFPException.php';  //加载异常控制组件
 
 //可选组件
 include_once CORE.'/Mysql.php';         //加载Mysql快速SQL生成组件
@@ -41,11 +42,22 @@ class Core extends Route{
 	 */
 	function bootstrap()
 	{
+		///////////////
+		//  必选引导
+		///////////////
+
+		//加载异常控制
+		$this->exceptionHandler();
+
 		//自动加载
 		$this->autoload();
 
 		//加载控制器
 		$this->toController();
+
+		///////////////
+		//  可选引导
+		///////////////
 
 		//加载默认视图
 		$this->controller->toView();
@@ -103,6 +115,22 @@ class Core extends Route{
 	{
 		$autoload_obj = new Autoload();
 		spl_autoload_register(array($autoload_obj,'load'));
+	}
+
+	/**
+	 * 异常控制
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
+	private function exceptionHandler()
+	{
+		$exception_obj = new SFPException();
+		set_exception_handler(array($exception_obj,'SPFExceptionHandler'));
 	}
 }
 
