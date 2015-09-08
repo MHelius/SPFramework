@@ -48,7 +48,7 @@ class index extends View{
 		//$res = $mysql->delete(array('id'=>1));
 
 		/* redis test */
-		//$redis = new Redish(0);
+		//$redis = new SPFRedis(0);
 		//$redis->redis()->set('xx','xx');
 
 		/* view test */
