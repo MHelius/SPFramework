@@ -58,7 +58,7 @@ class Route{
 		$f_func = array_pop($url);
 		$f_path = implode('/',$url);
 		$f_clss = end($url);
-		
+
 		return $this->path = array(
 			'path'  => empty($f_path)?$this->def_path:$f_path,
 			'clss'  => empty($f_clss)?$this->def_clss:$f_clss,
