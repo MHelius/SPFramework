@@ -13,6 +13,9 @@ class SFPException {
 	 */
 	function SPFExceptionHandler($exception)
 	{
+		//500code
+		header($_SERVER['SERVER_PROTOCOL'].' 500');
+
 		//utf-8
 		header("Content-type:text/html;charset=utf-8");
 
