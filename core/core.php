@@ -80,7 +80,7 @@ class Core extends Route{
 			}
 			else
 			{
-				throw new \Exception($path['path'].' Controller '.$path['func'].' Method Not Found');
+				throw new \Exception($path['path'].' Controller '.$path['func'].' Function Not Found');
 			}
 		}
 		else
