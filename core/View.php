@@ -23,7 +23,7 @@ class View extends Route{
 	 */
 	function toView($set_view = NULL)
 	{
-		$v_dir = $this->view_route($set_view);
+		$v_dir = $this->viewRoute($set_view);
 
 		if(file_exists($v_dir))
 		{
@@ -59,7 +59,7 @@ class View extends Route{
 	 * @throws
 	 * helius
 	 */
-	function view_route($set_view)
+	function viewRoute($set_view)
 	{
 		//初始化view
 		$arr        = $this->getPath();
@@ -95,7 +95,7 @@ class View extends Route{
 	 * @throws
 	 * helius
 	 */
-	function show_message($message,$type = 'error',$return_url = '###',$js = '')
+	function showMessage($message,$type = 'error',$return_url = '###',$js = '')
 	{
 		//会跳页面
 		if($return_url == '###')
