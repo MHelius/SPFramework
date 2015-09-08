@@ -13,7 +13,7 @@ define("CORE"	, DIRS."/core");        //框架目录
 include_once CONF.'/config.php';        //加载配置组件
 include_once CORE.'/Route.php';         //加载路由组件
 include_once CORE.'/Autoload.php';      //加载自动加载组件
-include_once CORE.'/SFPException.php';  //加载异常控制组件
+include_once CORE.'/SPFException.php';  //加载异常控制组件
 
 //可选组件
 include_once CORE.'/Mysql.php';         //加载Mysql快速SQL生成组件
@@ -129,7 +129,7 @@ class Core extends Route{
 	 */
 	private function exceptionHandler()
 	{
-		$exception_obj = new SFPException();
+		$exception_obj = new SPFException();
 		set_exception_handler(array($exception_obj,'SPFExceptionHandler'));
 	}
 }

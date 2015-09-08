@@ -1,5 +1,5 @@
 <?php
-class SFPException {
+class SPFException {
 
 	/**
 	 * SPF异常输出

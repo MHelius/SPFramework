@@ -1,5 +1,5 @@
 <?php
-class Redish{
+class SPFRedis{
 
 	protected $db;
 	protected $redis;
