@@ -63,7 +63,7 @@ class View extends Route{
 	{
 		//初始化view
 		$arr        = $this->getPath();
-		$def_view   = $arr['path'].'/'.$arr['file'];
+		$def_view   = $arr['path'].'/'.$arr['func'];
 		$view       = empty($set_view)?$def_view:$set_view;
 
 		//加载模板

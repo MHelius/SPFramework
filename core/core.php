@@ -72,13 +72,20 @@ class Core extends Route{
 			//加载控制器
 			include_once $controller_path;
 
-			$this->controller = new $path['path']();
+			$this->controller = new $path['clss']();
 
-			$this->controller->$path['file']();
+			if(method_exists($this->controller,$path['func']))
+			{
+				$this->controller->$path['func']();
+			}
+			else
+			{
+				throw new \Exception($path['path'].' controller '.$path['func'].' method not found');
+			}
 		}
 		else
 		{
-			throw new \Exception('controller not found');
+			throw new \Exception($path['path'].'controller not found');
 		}
 	}
 

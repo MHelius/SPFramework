@@ -9,8 +9,8 @@
 class Route{
 
 	public $def_path    = 'index';
-	public $def_file    = 'index';
 	public $def_clss    = 'index';
+	public $def_func    = 'index';
 	public $path        = array();
 
 	/**
@@ -55,14 +55,14 @@ class Route{
 		$url    = explode('/',$path);
 		unset($url[0]);
 
-		$f_file = array_pop($url);
+		$f_func = array_pop($url);
 		$f_path = implode('/',$url);
 		$f_clss = end($url);
-
+		
 		return $this->path = array(
-			'file'  => empty($f_file)?$this->def_file:$f_file,
 			'path'  => empty($f_path)?$this->def_path:$f_path,
 			'clss'  => empty($f_clss)?$this->def_clss:$f_clss,
+			'func'  => empty($f_func)?$this->def_func:$f_func,
 		);
 	}
 
