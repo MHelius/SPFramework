@@ -2,6 +2,11 @@
 
 class index extends View{
 
+	function __construct()
+	{
+
+	}
+
 	/**
 	 * 测试控制器
 	 *
@@ -18,13 +23,13 @@ class index extends View{
 		$this->assign('test',\test_module\tools::get());
 
 		/* mysql query test */
-		//$mysql = new Mysql('test','member');
+		$mysql = new Mysql('test','member');
 		//$mysql->field(array('*'));
 		//$mysql->where(array('id'=>array(4,5)));
 		//$res = $mysql->fetchAll();
 
 		/* mysql insert test */
-		//$res = $mysql->insert(array('val'=>'xxxx'));
+		$res = $mysql->insert(array('val'=>'xxxx'));
 
 		/* mysql update test */
 		//$res = $mysql->update(array('id'=>1),array('val'=>'vvvvvvv'));
