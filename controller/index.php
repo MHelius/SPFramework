@@ -2,6 +2,16 @@
 
 class index extends View{
 
+	/**
+	 * 构造函数（一定要存在，即使为空）
+	 *
+	 * 详细说明
+	 * @形参
+	 * @访问      公有
+	 * @返回值    void
+	 * @throws
+	 * helius
+	 */
 	function __construct()
 	{
 
@@ -23,13 +33,13 @@ class index extends View{
 		$this->assign('test',\test_module\tools::get());
 
 		/* mysql query test */
-		$mysql = new Mysql('test','member');
+		//$mysql = new Mysql('test','member');
 		//$mysql->field(array('*'));
 		//$mysql->where(array('id'=>array(4,5)));
 		//$res = $mysql->fetchAll();
 
 		/* mysql insert test */
-		$res = $mysql->insert(array('val'=>'xxxx'));
+		//$res = $mysql->insert(array('val'=>'xxxx'));
 
 		/* mysql update test */
 		//$res = $mysql->update(array('id'=>1),array('val'=>'vvvvvvv'));
