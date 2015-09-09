@@ -1,11 +1,6 @@
 <?php
 class SPFSession {
 
-	static function __construct()
-	{
-		die('vvvv');
-	}
-
 	/**
 	 * session开启
 	 *
