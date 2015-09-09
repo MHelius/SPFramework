@@ -29,8 +29,13 @@ class index extends View{
 	 */
 	function index()
 	{
+
 		/* output test */
 		$this->assign('test',\test_module\tools::get());
+
+		/* session test */
+		//SPFSession::Session()['a'] = 'x';
+		//$this->assign('session',SPFSession::Session());
 
 		/* mysql query test */
 		//$mysql = new Mysql('test','member');

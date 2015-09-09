@@ -18,6 +18,7 @@ include_once CORE.'/SPFException.php';  //加载异常控制组件
 //可选组件
 include_once CORE.'/Mysql.php';         //加载Mysql快速SQL生成组件
 include_once CORE.'/View.php';          //加载视图组件
+include_once CORE.'/SPFSession.php';    //加载SESSION组件
 
 /**
  * Created by helius
