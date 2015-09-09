@@ -2,7 +2,7 @@
 class SPFSession {
 
 	/**
-	 * session开启
+	 * 获取session
 	 *
 	 * 详细说明
 	 * @形参
