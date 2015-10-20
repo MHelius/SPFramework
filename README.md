@@ -31,17 +31,15 @@ SPFramework
 
 框架重写规则
 
-1.附上apache的重写规则文件.htaccess
+1.附上apache的重写规则文件
+
+	详见.htaccess文件
+
 2.附上nginx的重写规则
 	
 	if ($request_filename !~* /(front|admin|index\.php)){
                 rewrite ^/(.*)$ /index.php?w=$1 last;
-        }
-
-        if ($request_filename !~* /admin/(front|index\.php)){
-                rewrite ^/admin/(.*)$ /admin/index.php?w=$1 last;
-        }
-	
+        }	
 
 This project is a Stable Version
 
