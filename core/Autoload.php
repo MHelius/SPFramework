@@ -13,6 +13,8 @@ class Autoload {
 	 */
 	public function load($class_name)
 	{
+		$class_name = str_replace('\\','/',$class_name);
+	
 		$m_dir = MODE.'/'.$class_name.'.php';
 
 		if(file_exists($m_dir))
