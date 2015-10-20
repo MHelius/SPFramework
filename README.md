@@ -37,7 +37,7 @@ SPFramework
 
 2.附上nginx的重写规则
 	
-	if ($request_filename !~* /(front|admin|index\.php)){
+	if ($request_filename !~* /(front|admin|index\.php|favicon\.ico|robots\.txt)){
                 rewrite ^/(.*)$ /index.php?w=$1 last;
         }	
 
