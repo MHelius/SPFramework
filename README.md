@@ -29,7 +29,19 @@ SPFramework
 
 2.Redis单例类（Redis）
 
-（注意：附上apache的重写规则，nginx请按照apache的重写规则重写url，核心思想，隐藏index.php即可）
+框架重写规则
+
+1.附上apache的重写规则文件.htaccess
+2.附上nginx的重写规则
+	
+	if ($request_filename !~* /(front|admin|index\.php)){
+                rewrite ^/(.*)$ /index.php?w=$1 last;
+        }
+
+        if ($request_filename !~* /admin/(front|index\.php)){
+                rewrite ^/admin/(.*)$ /admin/index.php?w=$1 last;
+        }
+	
 
 This project is a Stable Version
 
