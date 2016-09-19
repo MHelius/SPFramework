@@ -1,5 +1,5 @@
 <?php
-class Mysql{
+class Mysql extends Config{
 
 	protected $db;
 	protected $table;
@@ -43,9 +43,7 @@ class Mysql{
 	private function getPdo()
 	{
 		//获取配置
-		global $config;
-
-		$conf = $config['mysql'][$this->db];
+		$conf = parent::$config['mysql'][$this->db];
 
 		//读写分离
 		if(isset($conf['read']) && isset($conf['write']))
@@ -93,7 +91,7 @@ class Mysql{
 	}
 
 	/**
-	 * 获取数据库链接配置
+	 * 数据库链接配置处理
 	 *
 	 * 详细说明
 	 * @形参
@@ -102,9 +100,10 @@ class Mysql{
 	 * @throws
 	 * helius
 	 */
-	private function getDbCofig($config)
+	private function dealDbCofig($config)
 	{
 		$config = (isset($config) && is_array($config))?$config:array();
+		
 		return $config + array(\PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 	}
 
@@ -120,49 +119,40 @@ class Mysql{
 	 */
 	private function pdoRout()
 	{
-		try
+		//获取配置
+		$conf = parent::$config['mysql'][$this->db];
+
+		//读写分离
+		if(isset($conf['read']) && isset($conf['write']))
 		{
-			//获取配置
-			global $config;
-
-			$conf = $config['mysql'][$this->db];
-
-			//读写分离
-			if(isset($conf['read']) && isset($conf['write']))
+			//写标签判断
+			if($this->wr_flag == 'w')
 			{
-				//写标签判断
-				if($this->wr_flag == 'w')
-				{
-					$this->pdo = self::$pdos[$this->db]['w'] = new PDO('mysql:host='.$conf['write']['host'].':'.$conf['write']['port'].';dbname='.$this->db,$conf['write']['user'],$conf['write']['pass'],$this->getDbCofig($conf['write']['config']));
-				}
-				//读标签判断
-				elseif($this->wr_flag == 'r')
-				{
-					//判断读取库权重
-					$rand = $this->weight($conf['read']);
-
-					$read_conf = $conf['read'][$rand];
-
-					$this->pdo = self::$pdos[$this->db]['r'][$rand] = new PDO('mysql:host='.$read_conf['host'].':'.$read_conf['port'].';dbname='.$this->db,$read_conf['user'],$read_conf['pass'],$this->getDbCofig($read_conf['config']));
-				}
-				else
-				{
-					throw new \Exception('Write And Read Flag Error');
-				}
+				$this->pdo = self::$pdos[$this->db]['w'] = new PDO('mysql:host='.$conf['write']['host'].':'.$conf['write']['port'].';dbname='.$this->db,$conf['write']['user'],$conf['write']['pass'],$this->dealDbCofig($conf['write']['config']));
 			}
-			//单库
-			elseif(isset($conf['host']))
+			//读标签判断
+			elseif($this->wr_flag == 'r')
 			{
-				$this->pdo = self::$pdos[$this->db] = new PDO('mysql:host='.$conf['host'].':'.$conf['port'].';dbname='.$this->db,$conf['user'],$conf['pass'],$this->getDbCofig($conf['config']));
+				//判断读取库权重
+				$rand = $this->weight($conf['read']);
+
+				$read_conf = $conf['read'][$rand];
+
+				$this->pdo = self::$pdos[$this->db]['r'][$rand] = new PDO('mysql:host='.$read_conf['host'].':'.$read_conf['port'].';dbname='.$this->db,$read_conf['user'],$read_conf['pass'],$this->dealDbCofig($read_conf['config']));
 			}
 			else
 			{
-				throw new \Exception('Config File Error');
+				throw new \Exception('Write And Read Flag Error');
 			}
 		}
-		catch(PDOException $e)
+		//单库
+		elseif(isset($conf['host']))
 		{
-			die('Connection failed: ' . $e->getMessage());
+			$this->pdo = self::$pdos[$this->db] = new PDO('mysql:host='.$conf['host'].':'.$conf['port'].';dbname='.$this->db,$conf['user'],$conf['pass'],$this->dealDbCofig($conf['config']));
+		}
+		else
+		{
+			throw new \Exception('Config File Error');
 		}
 	}
 

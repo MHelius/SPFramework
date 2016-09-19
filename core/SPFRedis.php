@@ -1,5 +1,5 @@
 <?php
-class SPFRedis{
+class SPFRedis extends Config{
 
 	protected $db;
 	protected $redis;
@@ -34,7 +34,7 @@ class SPFRedis{
 	function redis()
 	{
 		//获取配置
-		global $config;
+		$config = parent::$config;
 
 		$conf = $config['redis'][$this->db];
 
