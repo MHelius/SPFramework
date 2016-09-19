@@ -175,6 +175,12 @@ class Mysql extends Config{
 		{
 			$weight_max += $k;
 
+			//防止过多赋值造成性能损失
+			if($weight_max > 10)
+			{
+				throw new \Exception('Mysql Writes And Reads Weight Is Not Correct, Must Sum Less Then 10');
+			}
+
 			for($i=0;$i<$k;$i++)
 			{
 				$weight_arr[] = $k;
