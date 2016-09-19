@@ -34,9 +34,7 @@ class SPFRedis extends Config{
 	function redis()
 	{
 		//获取配置
-		$config = parent::$config;
-
-		$conf = $config['redis'][$this->db];
+		$conf = parent::$config['redis'][$this->db];
 
 		if(!empty(self::$rediss[$this->db]))
 		{
