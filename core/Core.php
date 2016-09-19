@@ -89,7 +89,7 @@ class Core extends Route{
 
 			if(method_exists($this->controller,$path['func']))
 			{
-				$this->controller->$path['func']();
+				$this->controller->{$path['func']}();
 			}
 			else
 			{
