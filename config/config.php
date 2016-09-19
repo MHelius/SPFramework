@@ -21,6 +21,7 @@ class Config{
 			),
 			'test2'=>array(
 				'read'=>array(
+					//权重值，仅支持所有数据之和 <= 10
 					'8'=>array(
 						'host'  =>'127.0.0.1',
 						'port'  =>'3306',
